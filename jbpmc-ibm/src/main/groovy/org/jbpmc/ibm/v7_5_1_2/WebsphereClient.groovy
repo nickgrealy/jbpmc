@@ -73,7 +73,7 @@ class WebsphereClient extends WsadminClient {
     }
 
     def uninstallApplication(applicationName) {
-        println "Stopping application: '$applicationName' ..."
+        println "Uninstalling application: '$applicationName' ..."
         assert applicationName, "You must provide an applicationName"
         runClasspathScript(properties.dmgr, '/websphere/uninstallApplication.jython', [applicationName])
     }
