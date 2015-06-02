@@ -91,8 +91,6 @@ distributions {
 project(':jbpmc-ibm') {
     dependencies {
         compile project(':jbpmc-api')
-        compile files('libs/v7_5_1_2/runtimes/com.ibm.ws.admin.client_7.0.0.jar')
-        compile files('libs/v7_5_1_2/runtimes/com.ibm.ws.security.crypto.jar')
         compile "org.slf4j:slf4j-api:1.6.4"
         compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
         testCompile "org.slf4j:slf4j-simple:1.6.4"

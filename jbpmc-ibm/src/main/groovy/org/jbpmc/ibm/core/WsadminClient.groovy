@@ -9,7 +9,7 @@ class WsadminClient {
     }
 
     static Map loadProperties(String environment, Map environmentConfig = [:], String configFilename = 'jbpmc-ibm.properties') {
-        // todo test config (over) loading (from diff sources)
+        // todo test config over-loading (from diff sources)
         def aggrConfig = [:]
         List<URL> locations = [
                 new File(System.properties.'user.home'.toString(), configFilename).toURI().toURL(),
@@ -25,8 +25,8 @@ class WsadminClient {
             }
         }
         aggrConfig << environmentConfig
-        validateProperties(aggrConfig, ['wsadminExec', 'ibmJdkHome'])
-        assert new File(aggrConfig.wsadminExec).exists(), "Wsadmin executable '$aggrConfig.wsadminExec' does not exist!"
+        validateProperties(aggrConfig, ['wsadmin_exec', 'ibmjdk_home'])
+        assert new File(aggrConfig.wsadmin_exec).exists(), "Wsadmin executable '$aggrConfig.wsadmin_exec' does not exist!"
         aggrConfig
     }
 
@@ -84,20 +84,20 @@ class WsadminClient {
 
     private def buildBaseCommand(def node, boolean langJython = true){
         validateProperties(node, ['username', 'password', 'hostname', 'conntype', 'port'])
-        [properties.wsadminExec, '-conntype', node.conntype, '-host', node.hostname, '-port', node.port,
+        [properties.wsadmin_exec, '-conntype', node.conntype, '-host', node.hostname, '-port', node.port,
          '-user', node.username, '-password', node.password, '-lang', langJython ? 'jython' : 'jacl']
     }
 
-    private def runCommand(List cmd, File workingDir = new File(properties.wsadminExec).parentFile, long timeoutMillis = 1000*60*60) {
+    private def runCommand(List cmd, File workingDir = new File(properties.wsadmin_exec).parentFile, long timeoutMillis = 1000*60*60) {
         println "Executing command: $workingDir> '" + cmd.join(' ') + "'"
         def bout = new ByteArrayOutputStream(), berr = new ByteArrayOutputStream()
         def envVars = System.getenv().collectEntries { k,v -> [k, v]}
-        envVars.JAVA_HOME = properties.ibmJdkHome
+        envVars.JAVA_HOME = properties.ibmjdk_home
         println "Using envVars: $envVars"
         def proc = cmd.execute(envVars.collect { k,v -> "$k=$v" }, workingDir)
         proc.waitForProcessOutput(
-                new MultiOutputStream([System.out, bout]),
-                new MultiOutputStream([System.err, berr])
+                new TeeOutputStream(System.out, bout),
+                new TeeOutputStream(System.err, berr)
         )
         proc.waitForOrKill(timeoutMillis)
         def exitVal = proc.exitValue()
@@ -109,18 +109,4 @@ class WsadminClient {
         sout
     }
 
-    class MultiOutputStream extends OutputStream {
-
-        List<OutputStream> streams
-
-        MultiOutputStream(List<OutputStream> streams = []) {
-            this.streams = streams
-        }
-
-        @Override
-        void write(int b) throws IOException {
-            streams.each { it.write(b) }
-        }
-
-    }
 }
