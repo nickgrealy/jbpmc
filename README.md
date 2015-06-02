@@ -20,8 +20,7 @@ Here are some potential applications of this library:
 - production support
 - creating generic bpm clients
 - server migration/upgrades
-- process instance migrationxx
-- ???
+- process instance migration
 
 ---
 
@@ -32,7 +31,8 @@ Here are some potential applications of this library:
 ### The following libraries are (Groovy) Implementations of the `jbpmc-api` library:
 
 - `jbpmc-api`
-    - `jbpmc-ibm` - [`7.5.1.2` runtime (partial) / <s>configuration</s> / <s>deployment</s>]
+    - `jbpmc-ibm`
+        - `7.5.1.2` [ runtime (partial) | <s>configuration</s> | <s>deployment</s> ]
     - <s>`jbpmc-activiti`</s>
     - <s>`jbpmc-appian`</s>
     - <s>`jbpmc-camunda`</s>
