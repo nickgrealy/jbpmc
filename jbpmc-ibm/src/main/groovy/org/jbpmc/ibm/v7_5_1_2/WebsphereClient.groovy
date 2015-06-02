@@ -3,7 +3,27 @@ package org.jbpmc.ibm.v7_5_1_2
 import org.jbpmc.ibm.core.WsadminClient
 
 /**
- * Provides methods to facilitate interacting with a Websphere Application server.
+ * <p>
+ *     Provides methods to facilitate interacting with a Websphere Application server.
+ * </p>
+ * <p>
+ *     <h3>Example usage</h3>
+ *     <pre><code>
+wsadmin_exec = '/somepath/wsadmin.bat'
+ibmjdk_home = '/somepath/ibm_sdk70'
+
+environments {
+    dev {
+        dmgr {
+            username = 'wasadmin'
+            password = 'password'
+            hostname = 'server'
+            conntype = 'SOAP'
+            port = '8880'
+        }
+    }
+}</code></pre>
+ * </p>
  */
 class WebsphereClient extends WsadminClient {
 
