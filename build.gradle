@@ -1,0 +1,100 @@
+
+apply plugin: 'idea'
+apply plugin: 'distribution'
+
+defaultTasks 'clean', 'distZip'
+
+task wrapper(type: Wrapper) {
+	gradleVersion = '2.4'
+}
+
+description = """\
+Project to facilitate remote administration of a BPM server.
+------------------------------------------
+Project version: ${version}
+Gradle version : ${gradle.gradleVersion}
+------------------------------------------
+
+To build:
+    gradlew clean install
+
+To setup for idea:
+    gradlew idea
+
+To generate javadocs:
+    gradlew clean javadoc
+"""
+
+allprojects {
+
+    apply plugin: 'groovy'
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: "maven"
+
+    def javaVersion = JavaVersion.VERSION_1_7
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+	
+    group = "org.jbpmc"
+    version = '1.0.1'
+
+    repositories {
+        mavenCentral()
+    }
+
+//    configurations {
+//        providedCompile
+//    }
+
+//    sourceSets.main.compileClasspath += configurations.providedCompile
+//    sourceSets.test.compileClasspath += configurations.providedCompile
+//    sourceSets.test.runtimeClasspath += configurations.providedCompile
+
+    dependencies {
+//        providedCompile "org.codehaus.groovy:groovy-all:2.4.3"
+        compile "org.codehaus.groovy:groovy-all:2.4.3"
+        testCompile 'junit:junit:4.4'
+    }
+
+    task enforceVersion << {
+        def foundVersion = JavaVersion.current()
+        if (foundVersion != javaVersion)
+            throw new IllegalStateException("Wrong Java version; required is " + javaVersion + ", but found " + foundVersion)
+    }
+	
+	task thoroughClean << {
+		ant.delete(dir:'.gradle')
+		ant.delete(dir:'out')
+		ant.delete(dir:'.', includes:'*.iws,*.ipr,*.iml')
+	}
+
+//    groovydoc.groovyClasspath = configurations.providedCompile
+
+    build.dependsOn enforceVersion, groovydoc
+	clean.dependsOn thoroughClean, cleanIdea
+
+}
+
+distributions {
+    main {
+        contents {
+            into('lib') {
+                from subprojects.configurations.runtime
+                from subprojects.jar
+                duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+            }
+        }
+    }
+}
+
+project(':jbpmc-ibm') {
+    dependencies {
+        compile project(':jbpmc-api')
+        compile files('libs/v7_5_1_2/runtimes/com.ibm.ws.admin.client_7.0.0.jar')
+        compile files('libs/v7_5_1_2/runtimes/com.ibm.ws.security.crypto.jar')
+        compile "org.slf4j:slf4j-api:1.6.4"
+        compile 'org.codehaus.groovy.modules.http-builder:http-builder:0.7.1'
+        testCompile "org.slf4j:slf4j-simple:1.6.4"
+    }
+}
