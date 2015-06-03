@@ -50,7 +50,7 @@ and [submit a pull request](https://help.github.com/articles/creating-a-pull-req
 
 - `jbmpc-api` - An API for accessing a BPM server.
 
-### Library Implementations:
+### Library Implementations
 
 - `jbpmc-api`
     - `jbpmc-ibm`
@@ -66,7 +66,7 @@ and [submit a pull request](https://help.github.com/articles/creating-a-pull-req
 ## TODO
 
 - Setup "runtime" project to test dependencies (i.e. removing groovy after compilation)
-- Document Example Usage (with @Grape('...'))
+- Document Example Usage (with @Grape('...')) or libs?
 - Document Example Config
 - Document Example wsadmin folder structure on windows
 - Add project to OSS Sonatype repo
