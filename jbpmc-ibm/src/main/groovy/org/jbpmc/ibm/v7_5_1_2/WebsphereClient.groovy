@@ -10,7 +10,7 @@ import org.jbpmc.ibm.core.WsadminClient
  *     <h3>Example usage</h3>
  *     <pre><code>
 wsadmin_exec = '/somepath/wsadmin.bat'
-ibmjdk_home = '/somepath/ibm_sdk70'
+IBMJDK_HOME = '/somepath/ibm_sdk70'
 
 environments {
     dev {
@@ -27,23 +27,26 @@ environments {
  */
 class WebsphereClient extends WsadminClient {
 
+
+    public static final Closure NOT_WASMESSAGE_REGEX = { !(it =~ /^WASX\d{4}\w:/) }
+
     WebsphereClient(String environment = System.getProperty('env', 'dev'), Map environmentConfig = [:]) {
         super(loadProperties(environment, environmentConfig))
     }
 
     List listApplications() {
         println "Listing applications ..."
-        runJaclCommand(properties.dmgr, '$AdminApp list').readLines()[2..-1]
+        runJaclCommand(properties.dmgr, '$AdminApp list').readLines().findAll NOT_WASMESSAGE_REGEX
     }
 
     List listCells() {
         println "Listing cells ..."
-        runJaclCommand(properties.dmgr, '$AdminConfig list Cell').readLines()[2..-1]
+        runJaclCommand(properties.dmgr, '$AdminConfig list Cell').readLines().findAll NOT_WASMESSAGE_REGEX
     }
 
     List listNodes() {
         println "Listing nodes ..."
-        runJaclCommand(properties.dmgr, '$AdminConfig list Node').readLines()[2..-1]
+        runJaclCommand(properties.dmgr, '$AdminConfig list Node').readLines().findAll NOT_WASMESSAGE_REGEX
     }
 
     List listApplicationManagers() {
@@ -75,7 +78,7 @@ class WebsphereClient extends WsadminClient {
     def uninstallApplication(applicationName) {
         println "Uninstalling application: '$applicationName' ..."
         assert applicationName, "You must provide an applicationName"
-        runClasspathScript(properties.dmgr, '/websphere/uninstallApplication.jython', [applicationName])
+        runClasspathScript(properties.dmgr, '/WebsphereClient/uninstallApplication.jython', [applicationName])
     }
 
 }

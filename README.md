@@ -50,15 +50,26 @@ and [submit a pull request](https://help.github.com/articles/creating-a-pull-req
 
 - `jbmpc-api` - An API for accessing a BPM server.
 
-### The following libraries are (Groovy) Implementations of the `jbpmc-api` library:
+### Library Implementations:
 
 - `jbpmc-api`
     - `jbpmc-ibm`
-        - `7.5.1.2` [ runtime (partial) | <s>configuration</s> | <s>deployment</s> ]
+        - `7.5.1.2` [ runtime (partial) | <s>configuration</s> | deployment (partial) ]
     - <s>`jbpmc-activiti`</s>
     - <s>`jbpmc-appian`</s>
     - <s>`jbpmc-camunda`</s>
     - <s>`jbpmc-jbpm`</s>
     - <s>`jbpmc-pega`</s>
+
+---
+
+## TODO
+
+- Setup "runtime" project to test dependencies (i.e. removing groovy after compilation)
+- Document Example Usage (with @Grape('...'))
+- Document Example Config
+- Document Example wsadmin folder structure on windows
+- Add project to OSS Sonatype repo
+- Setup main method application?
 
 ---

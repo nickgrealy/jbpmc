@@ -22,4 +22,4 @@ if dm:
     nodes=AdminControl.invoke(dm, "syncActiveNodes", "true")
     print "The following nodes have been synchronized: " + str(nodes)
 else:
-    print "Standalone server, no nodes to sync"
+    print "websphere: standalone server, no nodes to sync"

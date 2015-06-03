@@ -1,0 +1,32 @@
+#
+# Packages the application.
+#
+
+import sys
+from org.python.modules import time
+
+containerAcronym = sys.argv[0]
+containerSnapshotAcronym = sys.argv[1]
+outputFile = sys.argv[2]
+
+# Obtain deployment manager MBean
+dm=AdminControl.queryNames("type=DeploymentManager,*")
+
+# "syncActiveNodes" can only be run on the deployment manager's MBean,
+# it will fail in standalone environment
+if dm:
+    print "websphere: synchronizing nodes..."
+    # Force sync with all currently active nodes
+    nodes=AdminControl.invoke(dm, "syncActiveNodes", "true")
+    print "The following nodes have been synchronized: " + str(nodes)
+else:
+    print "websphere: standalone server, no nodes to sync"
+
+print "websphere: creating application='" + containerAcronym + "' snapshot='" + containerSnapshotAcronym + "' outputFile='" + outputFile + "' ..."
+AdminTask.BPMCreateOfflinePackage('[-containerAcronym %s -containerSnapshotAcronym %s -containerTrackAcronym Main -serverName packaging ]' % (containerAcronym,containerSnapshotAcronym))
+
+print "websphere: sleeping for 10 seconds after creating application ..."
+time.sleep(10)
+
+print "websphere: extracting application='" + containerAcronym + "' snapshot='" + containerSnapshotAcronym + "' outputFile='" + outputFile + "' ..."
+AdminTask.BPMExtractOfflinePackage('[-containerAcronym %s -containerSnapshotAcronym %s -containerTrackAcronym Main -serverName packaging -outputFile %s]' % (containerAcronym,containerSnapshotAcronym,outputFile))
